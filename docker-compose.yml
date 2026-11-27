@@ -1,0 +1,24 @@
+# NON TESTÉ dans l'environnement de développement (Docker indisponible) : voir docs/deployment.md.
+services:
+  app:
+    build: .
+    env_file: .env
+    environment:
+      DELIVERYOPT_OSRM_URL: http://osrm:5000
+    ports:
+      - "8000:8000"
+    volumes:
+      - app-data:/data
+    depends_on:
+      - osrm
+    restart: unless-stopped
+
+  osrm:
+    image: ghcr.io/project-osrm/osrm-backend:latest
+    command: osrm-routed --algorithm mld --max-table-size 200 /data/madagascar-latest.osrm
+    volumes:
+      - ./osrm-data:/data:ro
+    restart: unless-stopped
+
+volumes:
+  app-data:

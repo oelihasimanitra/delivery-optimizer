@@ -1,0 +1,7 @@
+.git
+tests
+data
+osrm-data
+__pycache__
+*.pyc
+.env
