@@ -1,5 +1,19 @@
 # Déploiement
 
+## 0. Windows, sans rien installer (version ZIP)
+Pour les utilisateurs qui ne veulent rien installer : ZIP de la *release*, voir `LISEZMOI.txt`.
+- **Contenu du ZIP** (≈ 38 Mo) : l'application, Python « embeddable » 3.13.17, les binaires OSRM v26.11.0 pour Windows (`osrm-routed`, `osrm-extract`, `osrm-partition`, `osrm-customize`) avec leurs profils, les DLL Visual C++ (`MSVCP140.dll`… absentes d'un Windows vierge), **la carte routière déjà préparée** de la région d'Antananarivo (`osrm-data\`), `LISEZMOI.txt`, `THIRD-PARTY-NOTICES.txt`.
+- **Zone couverte** : rectangle latitude -19,20 à -18,60, longitude 47,20 à 47,80 (≈ 65 × 65 km autour de la capitale). Réglable dans `scripts/common.ps1` (`$MapBbox`). Un colis hors zone est signalé par l'alerte `POINT_LOIN_DE_ROUTE`.
+- **Pourquoi pas tout Madagascar** : sur un PC de 7,9 Go de RAM, `osrm-extract` échoue (« bad allocation ») sur la carte entière (essai du 27/11/2026). La région d'Antananarivo se prépare en ≈ 12 s.
+- **Première utilisation** (`lancer.bat` → `scripts/launcher.ps1`) : demande un compte administrateur, démarre `osrm-routed` sur `127.0.0.1:5055` puis l'application sur `127.0.0.1:8000`, ouvre le navigateur. Fermer la fenêtre arrête tout. Journaux dans `logs\`. Aucun téléchargement ni calcul chez l'utilisateur ; fonctionne hors ligne.
+- **Si OSRM est indisponible**, le lanceur le dit et demande s'il faut continuer en mode estimation (non facturable) : jamais de repli silencieux. `DELIVERYOPT_OSRM_URL` défini dans l'environnement = OSRM externe utilisé tel quel.
+- **Mises à jour** : le ZIP n'est pas mis à jour automatiquement ; l'utilisateur extrait la nouvelle version (qui contient sa propre carte à jour) et recopie `data\`. La carte est figée à la date du build (`osrm-data\MAP-INFO.txt`).
+- **Fabriquer le ZIP** : `powershell -ExecutionPolicy Bypass -File scripts\build-release.ps1` (Windows, Internet, `tar.exe` et les DLL Visual C++ présentes dans System32). Les versions de Python et d'OSRM et leurs SHA-256 sont épinglés dans `scripts/fetch-tools.ps1` ; les profils Lua viennent de l'archive source GitHub du même tag (pas de somme de contrôle épinglée). Les routes sont téléchargées une fois depuis Overpass (API publique d'OpenStreetMap, parfois saturée : le script réessaie ; `dist\cache\antananarivo.osm` sert de cache, `-RefreshMap` pour renouveler), puis préparées avec les outils OSRM embarqués (`scripts/prepare-map.ps1`).
+- **Publier** : `gh release create v<version> dist\delivery-optimizer-v<version>-windows.zip dist\SHA256SUMS.txt`.
+- **Licence des données** : les fichiers `osrm-data` sont une base dérivée d'OpenStreetMap (ODbL) ; voir `THIRD-PARTY-NOTICES.txt`.
+
+> **Essai du 27/11/2026** (Windows 11, ZIP extrait dans un dossier accentué avec espace) : lancement sans aucune question, OSRM et application démarrés, distances routières réelles (dépôt → Ivato 19,9 km), plan de démonstration calculé dans Chrome sans bandeau « MODE ESTIMATION », total facturable, vérification indépendante cohérente. **Pas encore essayé sur un Windows vierge** (sans Python ni DLL Visual C++) : voir `docs/limitations.md`.
+
 ## 1. Démarrage rapide (sans Docker, mode estimation)
 Python 3.11 ou plus, rien à installer.
 ```

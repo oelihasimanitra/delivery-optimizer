@@ -17,3 +17,4 @@ Statuts : TODO, IN_PROGRESS, BLOCKED, REVIEW, TESTING, DONE.
 | T-011 | Docker, déploiement, documentation | Orchestrateur | Moyenne | T-009 | REVIEW (Docker jamais exécuté) | `docs/deployment.md` |
 | T-012 | Audit final indépendant | QA | Haute | tout | TODO | À faire par une personne ou un agent qui n'a pas écrit le code |
 | T-013 | Essai sur de vraies données (OSRM, adresses réelles, calibrage des poids et du profil moto) | Utilisateur + orchestrateur | Haute | T-011 | TODO | Réponses aux questions E et G |
+| T-014 | Release Windows « un clic » (ZIP, lanceur, build) | Orchestrateur | Haute | T-011 | TESTING | Essai de bout en bout réussi sur 1 PC (27/11/2026, dossier accentué, OSRM réel, Chrome). Reste : essai sur un Windows vierge, décision licence, publication de la release |

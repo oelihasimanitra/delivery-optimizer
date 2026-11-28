@@ -1,0 +1,33 @@
+﻿Composants tiers distribués avec la version Windows de Delivery Optimizer
+=========================================================================
+
+Python (tools\python)
+  Python Software Foundation License. Texte complet : tools\python\LICENSE.txt
+  https://www.python.org/
+
+OSRM - Open Source Routing Machine (tools\osrm : osrm-routed.exe, osrm-extract.exe,
+osrm-partition.exe, osrm-customize.exe, profils Lua)
+  Licence BSD 2-Clauses. Copyright (c) 2017, Project OSRM contributors. All rights reserved.
+  Redistribution and use in source and binary forms, with or without modification, are permitted
+  provided that the following conditions are met: (1) redistributions of source code must retain
+  the above copyright notice, this list of conditions and the following disclaimer;
+  (2) redistributions in binary form must reproduce the above copyright notice, this list of
+  conditions and the following disclaimer in the documentation and/or other materials provided
+  with the distribution.
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+  IMPLIED WARRANTIES ARE DISCLAIMED. Texte officiel : https://github.com/Project-OSRM/osrm-backend/blob/master/LICENSE.TXT
+  Les binaires proviennent des archives publiées sur https://github.com/Project-OSRM/osrm-backend/releases
+
+Bibliothèques d'exécution Microsoft Visual C++ (tools\osrm : msvcp140.dll, vcruntime140.dll,
+vcruntime140_1.dll)
+  Redistribuables Microsoft (déploiement « app-local »), nécessaires aux exécutables OSRM.
+
+Données cartographiques (osrm-data) : © les contributeurs d'OpenStreetMap, licence ODbL
+  https://www.openstreetmap.org/copyright
+  Les fichiers du dossier osrm-data sont une BASE DE DONNÉES DÉRIVÉE d'OpenStreetMap (routes de la région
+  d'Antananarivo, obtenues via l'API Overpass, puis transformées par OSRM). Au sens de la licence ODbL, ils
+  restent soumis à la licence ODbL (https://opendatacommons.org/licenses/odbl/1-0/) : vous pouvez les copier
+  et les réutiliser à cette condition, en mentionnant la source. La date des données est dans osrm-data\MAP-INFO.txt.
+  Mentionnez « © contributeurs d'OpenStreetMap » si vous publiez des résultats qui en dérivent.
+
+Le code de Delivery Optimizer lui-même est distribué sous licence MIT (fichier LICENSE).

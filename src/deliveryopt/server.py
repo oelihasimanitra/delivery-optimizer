@@ -51,6 +51,17 @@ class AppContext:
         self.throttle = self.throttle or LoginThrottle()
 
 
+def session_info(ctx: AppContext, username: str, role: str) -> dict:
+    """Informations de session renvoyées par /api/login et /api/me (mêmes champs : l'interface en dépend,
+    notamment billing_reliable pour le bandeau « MODE ESTIMATION »)."""
+    provider = ctx.provider
+    return {
+        "username": username, "role": role, "version": __version__,
+        "routing_mode": getattr(provider, "mode", "unknown"), "billing_reliable": bool(getattr(provider, "reliable", False)),
+        "geocoding_enabled": ctx.geocoder is not None,
+    }
+
+
 def _csv_safe(value) -> str:
     text = "" if value is None else str(value)
     return "'" + text if text[:1] in ("=", "+", "-", "@", "\t", "\r") else text
@@ -207,7 +218,7 @@ def make_handler(ctx: AppContext):
             token, token_hash = new_token()
             ctx.storage.add_session(token_hash, username, time.time() + SESSION_SECONDS)
             cookie = f"session={token}; HttpOnly; SameSite=Lax; Path=/; Max-Age={SESSION_SECONDS}" + ("; Secure" if ctx.secure_cookie else "")
-            self._json(200, {"username": username, "role": row["role"]}, {"Set-Cookie": cookie})
+            self._json(200, session_info(ctx, username, row["role"]), {"Set-Cookie": cookie})
 
         @route("POST", "/api/logout", None)
         def logout(self, user):
@@ -218,12 +229,7 @@ def make_handler(ctx: AppContext):
 
         @route("GET", "/api/me")
         def me(self, user):
-            provider = ctx.provider
-            self._json(200, {
-                "username": user["username"], "role": user["role"], "version": __version__,
-                "routing_mode": getattr(provider, "mode", "unknown"), "billing_reliable": bool(getattr(provider, "reliable", False)),
-                "geocoding_enabled": ctx.geocoder is not None,
-            })
+            self._json(200, session_info(ctx, user["username"], user["role"]))
 
         @route("POST", "/api/password")
         def change_password(self, user):

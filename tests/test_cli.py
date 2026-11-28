@@ -72,14 +72,14 @@ def test_serve_without_user_refuses(tmp_path):
     env = {**os.environ, "DELIVERYOPT_DB": str(tmp_path / "x.db"), "PYTHONPATH": str(ROOT / "src")}
     env.pop("DELIVERYOPT_ADMIN_USER", None)
     env.pop("DELIVERYOPT_ADMIN_PASSWORD", None)
-    r = subprocess.run([sys.executable, str(ROOT / "run.py"), "serve", "--port", "0"], env=env, capture_output=True, text=True, timeout=30)
+    r = subprocess.run([sys.executable, str(ROOT / "run.py"), "serve", "--port", "0"], env=env, stdin=subprocess.DEVNULL, capture_output=True, text=True, timeout=30)
     assert r.returncode == 2 and "Aucun utilisateur" in r.stderr
 
 
 def test_serve_real_process_end_to_end(tmp_path):
     port = 18765
     env = {**os.environ, "DELIVERYOPT_DB": str(tmp_path / "s.db"), "DELIVERYOPT_ADMIN_USER": "root", "DELIVERYOPT_ADMIN_PASSWORD": "motdepasse-root", "PYTHONPATH": str(ROOT / "src")}
-    proc = subprocess.Popen([sys.executable, str(ROOT / "run.py"), "serve", "--port", str(port)], env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    proc = subprocess.Popen([sys.executable, str(ROOT / "run.py"), "serve", "--port", str(port)], env=env, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     try:
         for _ in range(50):
             try:

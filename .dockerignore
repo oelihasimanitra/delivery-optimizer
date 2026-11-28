@@ -5,3 +5,8 @@ osrm-data
 __pycache__
 *.pyc
 .env
+tools
+logs
+dist
+scripts
+*.zip

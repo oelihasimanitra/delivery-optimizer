@@ -1,0 +1,83 @@
+﻿DELIVERY OPTIMIZER - Organisation des tournées de livraison (Antananarivo)
+==========================================================================
+
+INSTALLATION (une seule fois)
+-----------------------------
+1. Téléchargez le fichier ZIP (delivery-optimizer-vX.Y.Z-windows.zip).
+2. Faites un CLIC DROIT sur le ZIP, puis "Extraire tout...".
+   Important : ne lancez pas le programme depuis l'intérieur du ZIP.
+   Choisissez un dossier simple, par exemple C:\delivery-optimizer
+3. Ouvrez le dossier extrait et double-cliquez sur  lancer.bat
+
+Il n'y a rien d'autre à installer : ni Python, ni autre logiciel. La carte
+routière est déjà dans le ZIP : pas de téléchargement, pas de calcul, et le
+programme fonctionne même sans Internet.
+
+
+SI WINDOWS AFFICHE "Windows a protégé votre ordinateur"
+-------------------------------------------------------
+C'est normal pour un programme qui n'est pas signé. Cliquez sur
+"Informations complémentaires", puis sur "Exécuter quand même".
+Votre antivirus peut aussi poser une question : autorisez le dossier.
+
+
+AU PREMIER LANCEMENT
+--------------------
+- Le programme vous demande de créer un compte administrateur (nom + mot de
+  passe de 8 caractères minimum). Notez ce mot de passe : il ne peut pas être
+  affiché ni retrouvé.
+- Votre navigateur s'ouvre sur l'application (http://127.0.0.1:8000).
+
+
+UTILISATION AU QUOTIDIEN
+------------------------
+- Double-cliquez sur lancer.bat, attendez que le navigateur s'ouvre.
+- Pendant que vous travaillez, GARDEZ LA FENÊTRE NOIRE OUVERTE.
+- Pour arrêter l'application : fermez la fenêtre noire.
+- Mode d'emploi détaillé : docs\user-guide.md
+
+
+ZONE COUVERTE PAR LA CARTE
+--------------------------
+La carte routière couvre la région d'Antananarivo : un carré d'environ
+65 km x 65 km autour de la capitale (latitude -19,20 à -18,60 ; longitude
+47,20 à 47,80). Elle date du jour indiqué dans  osrm-data\MAP-INFO.txt  .
+- Une adresse hors de cette zone ne peut pas être calculée correctement :
+  l'application signale alors "le point est à ... m de la route la plus
+  proche". Vérifiez la position de ces colis.
+- Les routes nouvelles ou modifiées après la date de la carte n'y figurent
+  pas. La carte est renouvelée avec chaque nouvelle version du programme.
+
+
+VOS DONNÉES ET LES SAUVEGARDES
+------------------------------
+Tout ce que vous saisissez (comptes, paramètres, historique des plans) est dans
+le dossier  data  . Pour sauvegarder : copiez ce dossier (application fermée).
+
+
+MISE À JOUR VERS UNE NOUVELLE VERSION
+-------------------------------------
+Extrayez le nouveau ZIP dans un autre dossier, puis copiez dedans l'ancien
+dossier  data  . La nouvelle version contient sa propre carte à jour.
+
+
+EN CAS DE PROBLÈME
+------------------
+- Un message en rouge explique en général quoi faire. Lisez-le jusqu'au bout.
+- "Il manque Microsoft Visual C++ Redistributable" : installez-le (gratuit)
+  depuis https://aka.ms/vs/17/release/vc_redist.x64.exe puis relancez.
+- "Le port 8000 est déjà utilisé" : l'application est peut-être déjà ouverte ;
+  fermez les autres fenêtres noires puis relancez.
+- Les détails techniques sont dans le dossier  logs  : joignez-les si vous
+  demandez de l'aide.
+
+
+À SAVOIR AVANT DE FACTURER
+--------------------------
+- Si le service de routage ne démarre pas, le programme vous propose de
+  continuer en "mode estimation" : les distances sont alors approximatives et
+  les tarifs calculés NE SONT PAS FACTURABLES. Une bannière rouge le rappelle.
+- Les distances suivent le réseau routier, mais les durées sont calculées avec
+  un profil voiture (pas moto) : elles sont approximatives.
+- Cette version n'a pas encore été validée sur de vraies livraisons.
+  Vérifiez toujours les résultats (voir docs\limitations.md).

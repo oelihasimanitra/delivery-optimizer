@@ -38,10 +38,24 @@ def test_login_ok_sets_secure_flags_and_me(live_server):
     c = Client(base)
     status, body, headers = c.login("admin", "motdepasse-admin")
     cookie = headers["Set-Cookie"]
-    assert status == 200 and body == {"username": "admin", "role": "admin"}
+    assert status == 200 and body["username"] == "admin" and body["role"] == "admin"
     assert "HttpOnly" in cookie and "SameSite=Lax" in cookie
     status, me, _ = c.request("GET", "/api/me")
     assert status == 200 and me["username"] == "admin" and me["routing_mode"] == "estimate" and me["billing_reliable"] is False
+    # Régression : la réponse de login doit porter les mêmes champs que /api/me. Sinon l'interface, qui s'en sert
+    # juste après la connexion, n'a pas billing_reliable et affiche à tort « MODE ESTIMATION » même avec OSRM.
+    assert body == me
+
+
+def test_login_reports_reliable_routing_when_osrm_is_configured(live_server):
+    """Bug constaté à l'essai de la release Windows : avec OSRM actif, l'interface affichait « MODE ESTIMATION »
+    après la connexion, car login ne renvoyait pas billing_reliable."""
+    from support import GridProvider
+
+    base, ctx = live_server
+    ctx.provider = GridProvider()  # présenté comme routier (mode « osrm », fiable)
+    status, body, _ = Client(base).login("admin", "motdepasse-admin")
+    assert status == 200 and body["routing_mode"] == "osrm" and body["billing_reliable"] is True
 
 
 def test_login_wrong_password_and_throttle(live_server):
@@ -282,7 +296,8 @@ def test_keepalive_connection_survives_unread_body_and_errors(live_server):
         conn.request("POST", "/api/plans", body=b"x" * (5 * 1024 * 1024 + 10), headers=hdr)
         r = conn.getresponse(); r.read()
         assert r.status == 413
-    except (BrokenPipeError, ConnectionResetError, http.client.RemoteDisconnected):
+    except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError, http.client.RemoteDisconnected):
+        # ConnectionAbortedError (WinError 10053) : forme que prend la coupure sous Windows.
         pass
     finally:
         conn.close()
